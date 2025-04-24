@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TSP Algorithm Comparison</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f9;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        .section {
+            margin: 20px 0;
+        }
+        .section h2 {
+            color: #007bff;
+        }
+        .section p {
+            line-height: 1.6;
+            color: #555;
+        }
+        canvas {
+            max-width: 100%;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Comparison of ABC, Genetic Algorithm, and Hybrid for TSP</h1>
+
+        <div class="section">
+            <h2>Artificial Bee Colony (ABC) Algorithm</h2>
+            <p>
+                The ABC algorithm is inspired by the foraging behavior of bees. It excels in <strong>exploitation</strong>, focusing on refining solutions within a local search space. For the Traveling Salesman Problem (TSP), ABC efficiently fine-tunes routes by iteratively improving paths through employed and onlooker bee phases. However, its exploration capability is limited, which may lead to getting stuck in local optima.
+            </p>
+        </div>
+
+        <div class="section">
+            <h2>Genetic Algorithm (GA)</h2>
+            <p>
+                The Genetic Algorithm mimics natural evolution through selection, crossover, and mutation. It is highly effective for <strong>exploration</strong>, as it maintains a diverse population of solutions and explores the global search space. In TSP, GA generates varied routes but may converge slowly due to less emphasis on local optimization.
+            </p>
+        </div>
+
+        <div class="section">
+            <h2>Hybrid ABC-GA Approach</h2>
+            <p>
+                The hybrid approach combines the strengths of ABC and GA to achieve an optimal balance between exploration and exploitation. GA's diverse population explores the solution space, while ABC's local search refines promising routes. This synergy often leads to <strong>optimal solutions</strong> for TSP, with faster convergence and better route quality compared to standalone ABC or GA.
+            </p>
+        </div>
+
+        <div class="section">
+            <h2>Performance Comparison</h2>
+            <p>
+                The chart below illustrates a hypothetical comparison of solution quality (lower is better) for ABC, GA, and the hybrid approach. The hybrid method typically outperforms the individual algorithms due to its balanced exploration and exploitation.
+            </p>
+            <canvas id="performanceChart"></canvas>
+        </div>
+    </div>
+
+    <script>
+        const ctx = document.getElementById('performanceChart').getContext('2d');
+        const performanceChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['ABC', 'Genetic Algorithm', 'Hybrid ABC-GA'],
+                datasets: [{
+                    label: 'Solution Quality (Cost)',
+                    data: [1200, 1300, 1000], // Hypothetical values
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.6)',
+                        'rgba(54, 162, 235, 0.6)',
+                        'rgba(75, 192, 192, 0.6)'
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(75, 192, 192, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Solution Cost (Lower is Better)'
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: true
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

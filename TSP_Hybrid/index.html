@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TSP Solver - Hybrid ABC/GA</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+</head>
+<body>
+    <h1 class="page-title">Traveling Salesman Problem Solver</h1>
+    <!-- <p>Solve the TSP using Hybrid Artificial Bee Colony and Genetic Algorithm</p> -->
+    
+    <div class="container">
+        <div class="settings">
+            <label for="num-cities">Number of Cities:</label>
+            <input type="number" id="num-cities" min="5" max="50" value="10">
+            
+            <label for="algorithm">Algorithm:</label>
+            <select id="algorithm" onchange="handleAlgorithmChange(this.value)">
+                <option value="abc">Artificial Bee Colony</option>
+                <option value="ga">Genetic Algorithm</option>
+                <option value="hybrid" selected>Hybrid ABC/GA</option>
+            </select>
+
+            <div class="controls">
+                <button id="generate-btn">Generate Cities</button>
+                <button id="solve-btn" disabled>Solve TSP</button>
+                <button id="visualize-btn" disabled>Visualize Path</button>
+                <button id="stop-btn" disabled>Stop</button>
+            </div>
+
+            <div class="stats">
+                <p>Distance: <span id="distance">-</span></p>
+                <p>Iterations: <span id="iterations">-</span></p>
+                <p>Time: <span id="time">-</span> ms</p>
+                <div id="convergence-chart" class="chart-container"></div>
+            </div>
+            
+
+            <div id="abc-params" class="algorithm-params">
+                <h3>ABC Parameters</h3>
+                <label for="abc-colony-size">Colony Size:</label>
+                <input type="number" id="abc-colony-size" min="10" max="100" value="30">
+                
+                <label for="abc-max-iterations">Max Iterations:</label>
+                <input type="number" id="abc-max-iterations" min="10" max="1000" value="100">
+                
+                <label for="abc-limit">Limit:</label>
+                <input type="number" id="abc-limit" min="5" max="50" value="20">
+            </div>
+            
+            <div id="ga-params" class="algorithm-params">
+                <h3>GA Parameters</h3>
+                <label for="ga-population-size">Population Size:</label>
+                <input type="number" id="ga-population-size" min="10" max="100" value="50">
+                
+                <label for="ga-max-generations">Max Generations:</label>
+                <input type="number" id="ga-max-generations" min="10" max="1000" value="100">
+                
+                <label for="ga-mutation-rate">Mutation Rate:</label>
+                <input type="number" id="ga-mutation-rate" min="0.01" max="0.5" step="0.01" value="0.1">
+                
+                <label for="ga-crossover-rate">Crossover Rate:</label>
+                <input type="number" id="ga-crossover-rate" min="0.1" max="1.0" step="0.1" value="0.8">
+            </div>
+            
+            <div id="hybrid-params" class="algorithm-params">
+                <h3>Hybrid ABC/GA Parameters</h3>
+                <label for="hybrid-population-size">Population Size:</label>
+                <input type="number" id="hybrid-population-size" min="10" max="100" value="40">
+                
+                <label for="hybrid-max-iterations">Max Iterations:</label>
+                <input type="number" id="hybrid-max-iterations" min="10" max="1000" value="80">
+                
+                <label for="hybrid-limit">ABC Limit:</label>
+                <input type="number" id="hybrid-limit" min="5" max="50" value="15">
+                
+                <label for="hybrid-mutation-rate">Mutation Rate:</label>
+                <input type="number" id="hybrid-mutation-rate" min="0.01" max="0.5" step="0.01" value="0.08">
+                
+                <label for="hybrid-crossover-rate">Crossover Rate:</label>
+                <input type="number" id="hybrid-crossover-rate" min="0.1" max="1.0" step="0.1" value="0.7">
+                
+                <label for="hybrid-abc-phase">ABC Phase Length:</label>
+                <input type="number" id="hybrid-abc-phase" min="1" max="50" value="5">
+                
+                <label for="hybrid-ga-phase">GA Phase Length:</label>
+                <input type="number" id="hybrid-ga-phase" min="1" max="50" value="5">
+            </div>
+            
+           
+            
+            <!-- <div class="stats">
+                <p>Distance: <span id="distance">-</span></p>
+                <p>Iterations: <span id="iterations">-</span></p>
+                <p>Time: <span id="time">-</span> ms</p>
+                <div id="convergence-chart" class="chart-container"></div>
+            </div> -->
+        </div>
+        
+       <div>
+        <div class="map-container" id="map">
+        <img src=" https://nmcdn.io/e186d21f8c7946a19faed23c3da2f0da/347bed083486499c98f1609efa95efbd/files/blog/improving-google-maps-links-with-google-place-ids/maps-bg-process-s1440x-t1605674024.jpg?v=7aa6d54725" width="750" height="500">
+    </div>
+        <!-- Button to navigate to comparison page -->
+         <div>
+        <button class="comparison-btn" onclick="window.location.href='comparison.html'">View Algorithm Comparison</button>
+        </div>
+    </div>
+    
+    </div>
+
+    <script src="script.js">
+        
+    </script>
+</body>
+</html>

@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TSP Solver - Hybrid ABC/GA</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <i class="fas fa-route me-2"></i>
+                TSP Hybrid Solver
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#about" data-bs-toggle="modal" data-bs-target="#aboutModal">
+                            <i class="fas fa-info-circle me-1"></i> About
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid py-4">
+        <div class="row intro-section mb-4">
+            <div class="col-md-12 text-center">
+                <h1 class="display-5">Traveling Salesman Problem Solver</h1>
+                <p class="lead">Hybrid approach using Artificial Bee Colony and Genetic Algorithms</p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-4">
+                <div class="card settings-card mb-3">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="card-title mb-0">
+                            <i class="fas fa-cogs me-2"></i>Settings
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label for="map-type" class="form-label">Map Type:</label>
+                            <select id="map-type" class="form-select">
+                                <option value="random">Random Points</option>
+                                <option value="real-world">Real World Map</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3" id="random-settings">
+                            <label for="num-cities" class="form-label">Number of Cities:</label>
+                            <input type="number" id="num-cities" class="form-control" min="5" max="50" value="10">
+                        </div>
+
+                        <div id="real-world-settings" style="display: none;" class="mb-3">
+                            <label for="country-select" class="form-label">Select Country:</label>
+                            <select id="country-select" class="form-select mb-2">
+                                <option value="india">India</option>
+                                <option value="usa">United States</option>
+                                <option value="uk">United Kingdom</option>
+                                <option value="australia">Australia</option>
+                                <option value="custom">Custom Points</option>
+                            </select>
+                            <div id="custom-controls" style="display: none;">
+                                <small class="text-muted">Click on the map to add custom points</small>
+                                <button id="clear-points" class="btn btn-sm btn-outline-secondary mt-2">
+                                    <i class="fas fa-trash me-1"></i>Clear Points
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="algorithm" class="form-label">Algorithm:</label>
+                            <select id="algorithm" class="form-select">
+                <option value="abc">Artificial Bee Colony</option>
+                <option value="ga">Genetic Algorithm</option>
+                <option value="hybrid" selected>Hybrid ABC/GA</option>
+            </select>
+                        </div>
+
+                        <div class="algorithm-params" id="abc-params">
+                            <h6 class="text-primary mb-3">ABC Parameters</h6>
+                            <div class="mb-2">
+                                <label for="abc-colony-size" class="form-label">Colony Size:</label>
+                                <input type="number" id="abc-colony-size" class="form-control" min="10" max="100" value="30">
+                            </div>
+                            
+                            <div class="mb-2">
+                                <label for="abc-max-iterations" class="form-label">Max Iterations:</label>
+                                <input type="number" id="abc-max-iterations" class="form-control" min="10" max="1000" value="100">
+            </div>
+            
+                            <div class="mb-2">
+                                <label for="abc-limit" class="form-label">Limit:</label>
+                                <input type="number" id="abc-limit" class="form-control" min="5" max="50" value="20">
+                            </div>
+                        </div>
+                        
+                        <div class="algorithm-params" id="ga-params">
+                            <h6 class="text-primary mb-3">GA Parameters</h6>
+                            <div class="mb-2">
+                                <label for="ga-population-size" class="form-label">Population Size:</label>
+                                <input type="number" id="ga-population-size" class="form-control" min="10" max="100" value="50">
+                            </div>
+                            
+                            <div class="mb-2">
+                                <label for="ga-max-generations" class="form-label">Max Generations:</label>
+                                <input type="number" id="ga-max-generations" class="form-control" min="10" max="1000" value="100">
+            </div>
+            
+                            <div class="mb-2">
+                                <label for="ga-mutation-rate" class="form-label">Mutation Rate:</label>
+                                <input type="number" id="ga-mutation-rate" class="form-control" min="0.01" max="0.5" step="0.01" value="0.1">
+                            </div>
+                            
+                            <div class="mb-2">
+                                <label for="ga-crossover-rate" class="form-label">Crossover Rate:</label>
+                                <input type="number" id="ga-crossover-rate" class="form-control" min="0.1" max="1.0" step="0.1" value="0.8">
+                            </div>
+                        </div>
+                        
+                        <div class="algorithm-params" id="hybrid-params">
+                            <h6 class="text-primary mb-3">Hybrid ABC/GA Parameters</h6>
+                            <div class="mb-2">
+                                <label for="hybrid-population-size" class="form-label">Population Size:</label>
+                                <input type="number" id="hybrid-population-size" class="form-control" min="10" max="100" value="40">
+                            </div>
+                            
+                            <div class="mb-2">
+                                <label for="hybrid-max-iterations" class="form-label">Max Iterations:</label>
+                                <input type="number" id="hybrid-max-iterations" class="form-control" min="10" max="1000" value="80">
+            </div>
+            
+                            <div class="mb-2">
+                                <label for="hybrid-limit" class="form-label">ABC Limit:</label>
+                                <input type="number" id="hybrid-limit" class="form-control" min="5" max="50" value="15">
+                            </div>
+                            
+                            <div class="mb-2">
+                                <label for="hybrid-mutation-rate" class="form-label">Mutation Rate:</label>
+                                <input type="number" id="hybrid-mutation-rate" class="form-control" min="0.01" max="0.5" step="0.01" value="0.08">
+                            </div>
+                            
+                            <div class="mb-2">
+                                <label for="hybrid-crossover-rate" class="form-label">Crossover Rate:</label>
+                                <input type="number" id="hybrid-crossover-rate" class="form-control" min="0.1" max="1.0" step="0.1" value="0.7">
+                            </div>
+                            
+                            <div class="mb-2">
+                                <label for="hybrid-abc-phase" class="form-label">ABC Phase Length:</label>
+                                <input type="number" id="hybrid-abc-phase" class="form-control" min="1" max="50" value="5">
+                            </div>
+                            
+                            <div class="mb-2">
+                                <label for="hybrid-ga-phase" class="form-label">GA Phase Length:</label>
+                                <input type="number" id="hybrid-ga-phase" class="form-control" min="1" max="50" value="5">
+                            </div>
+                        </div>
+
+                        <div class="action-btns mt-4">
+                            <button id="generate-btn" class="btn btn-success">
+                                <i class="fas fa-map-marker-alt me-1"></i>Generate Cities
+                            </button>
+                            <button id="solve-btn" class="btn btn-primary" disabled>
+                                <i class="fas fa-play me-1"></i>Solve TSP
+                            </button>
+                            <button id="visualize-btn" class="btn btn-info text-white" disabled>
+                                <i class="fas fa-eye me-1"></i>Visualize
+                            </button>
+                            <button id="stop-btn" class="btn btn-danger" disabled>
+                                <i class="fas fa-stop me-1"></i>Stop
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card stats-card">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="card-title mb-0">
+                            <i class="fas fa-chart-line me-2"></i>Statistics
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="stats-info">
+                            <div class="row mb-2">
+                                <div class="col-6">Distance:</div>
+                                <div class="col-6 text-end fw-bold" id="distance">-</div>
+                            </div>
+                            <div class="row mb-2">
+                                <div class="col-6">Iterations:</div>
+                                <div class="col-6 text-end fw-bold" id="iterations">-</div>
+                            </div>
+                            <div class="row mb-2">
+                                <div class="col-6">Time:</div>
+                                <div class="col-6 text-end fw-bold"><span id="time">-</span> ms</div>
+                            </div>
+                            <div class="row mb-2">
+                                <div class="col-6">Improvement:</div>
+                                <div class="col-6 text-end fw-bold" id="improvement">-</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-8">
+                <div class="card mb-4">
+                    <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                        <h5 class="card-title mb-0">
+                            <i class="fas fa-map me-2"></i>Map View
+                        </h5>
+                        <div class="map-controls">
+                            <button id="toggle-labels" class="btn btn-sm btn-light">
+                                <i class="fas fa-tags"></i>
+                            </button>
+                            <button id="toggle-heatmap" class="btn btn-sm btn-light">
+                                <i class="fas fa-fire"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body p-0">
+                        <div id="map" class="map-container"></div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card mb-3">
+                            <div class="card-header bg-primary text-white">
+                                <h5 class="card-title mb-0">
+                                    <i class="fas fa-chart-line me-2"></i>Convergence Chart
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <div id="convergence-chart" class="chart-container">
+                                    <canvas></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card mb-3">
+                            <div class="card-header bg-primary text-white">
+                                <h5 class="card-title mb-0">
+                                    <i class="fas fa-chart-bar me-2"></i>Algorithm Comparison
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <div id="comparison-chart" class="chart-container">
+                                    <canvas></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="card-header bg-primary text-white">
+                                <h5 class="card-title mb-0">
+                                    <i class="fas fa-history me-2"></i>Solution History
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-striped table-sm" id="history-table">
+                                        <thead>
+                                            <tr>
+                                                <th>#</th>
+                                                <th>Algorithm</th>
+                                                <th>Cities</th>
+                                                <th>Distance</th>
+                                                <th>Time (ms)</th>
+                                                <th>Improvement</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <!-- History will be added here -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- About Modal -->
+    <div class="modal fade" id="aboutModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title">About TSP Hybrid Solver</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <h5>The Traveling Salesman Problem</h5>
+                    <p>The Traveling Salesman Problem (TSP) is a classic optimization problem where a salesman must visit a set of cities and return to the starting city, minimizing the total distance traveled while visiting each city exactly once.</p>
+                    
+                    <h5>Artificial Bee Colony (ABC) Algorithm</h5>
+                    <p>The ABC algorithm is a swarm-based optimization technique inspired by the foraging behavior of honey bees. It consists of three phases:</p>
+                    <ul>
+                        <li><strong>Employed bee phase:</strong> Each employed bee is associated with a food source and tries to find a better source in its neighborhood.</li>
+                        <li><strong>Onlooker bee phase:</strong> Onlooker bees choose food sources based on probability proportional to their quality.</li>
+                        <li><strong>Scout bee phase:</strong> If a food source hasn't improved for a certain number of iterations, it's abandoned, and a scout bee finds a new random source.</li>
+                    </ul>
+                    
+                    <h5>Genetic Algorithm (GA)</h5>
+                    <p>GA is an evolutionary algorithm inspired by natural selection. It works through:</p>
+                    <ul>
+                        <li><strong>Selection:</strong> Selecting individuals from the population based on their fitness.</li>
+                        <li><strong>Crossover:</strong> Combining parts of two parent solutions to create offspring.</li>
+                        <li><strong>Mutation:</strong> Randomly altering parts of solutions to maintain diversity.</li>
+                    </ul>
+                    
+                    <h5>Hybrid Approach</h5>
+                    <p>This application uses a hybrid approach, alternating between ABC and GA to leverage the strengths of both algorithms. ABC is good at exploration, while GA excels at exploitation, making their combination particularly effective for solving complex TSP instances.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- JavaScript Dependencies -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/heatmap.js@2.0.5/build/heatmap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/leaflet-heatmap@1.0.0/leaflet-heatmap.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

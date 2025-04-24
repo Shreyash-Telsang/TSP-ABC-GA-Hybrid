@@ -1,0 +1,265 @@
+:root {
+    --primary-color: #3498db;
+    --secondary-color: #2ecc71;
+    --dark-color: #2c3e50;
+    --light-color: #ecf0f1;
+    --danger-color: #e74c3c;
+    --warning-color: #f39c12;
+    --info-color: #1abc9c;
+    --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --transition: all 0.3s ease;
+}
+
+body {
+    font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    background-color: #f8f9fa;
+    color: #333;
+}
+
+.intro-section {
+    padding: 1rem 0;
+}
+
+.settings-card, .stats-card {
+    box-shadow: var(--shadow);
+    transition: var(--transition);
+    border: none;
+    border-radius: 0.5rem;
+    overflow: hidden;
+}
+
+.settings-card:hover, .stats-card:hover {
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.card-header {
+    padding: 0.75rem 1.25rem;
+}
+
+.map-container {
+    height: 500px;
+    border-radius: 0.25rem;
+    overflow: hidden;
+    position: relative;
+}
+
+/* For the random cities on the map */
+.city {
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    background-color: #e74c3c;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1000;
+    box-shadow: 0 0 0 2px white;
+}
+
+.city.depot {
+    background-color: #3498db;
+    width: 16px;
+    height: 16px;
+    z-index: 1001;
+}
+
+.city.current {
+    background-color: #f39c12;
+    animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(243, 156, 18, 0.7);
+    }
+    70% {
+        box-shadow: 0 0 0 10px rgba(243, 156, 18, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(243, 156, 18, 0);
+    }
+}
+
+.city-label {
+    position: absolute;
+    font-size: 12px;
+    font-weight: bold;
+    color: #333;
+    background-color: rgba(255, 255, 255, 0.8);
+    padding: 2px 4px;
+    border-radius: 2px;
+    transform: translate(8px, -8px);
+    z-index: 1002;
+}
+
+.path {
+    position: absolute;
+    pointer-events: none;
+    z-index: 999;
+}
+
+.algorithm-params {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid #dee2e6;
+    display: none;
+}
+
+.action-btns {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+}
+
+.chart-container {
+    height: 250px;
+    width: 100%;
+    background-color: white;
+    border-radius: 0.25rem;
+}
+
+.map-controls {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.stats-info {
+    font-size: 0.95rem;
+}
+
+/* Tooltip for map points */
+.leaflet-tooltip {
+    background-color: rgba(255, 255, 255, 0.9);
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    color: #333;
+    padding: 4px 8px;
+    font-size: 12px;
+    white-space: nowrap;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+/* Custom marker styling */
+.custom-marker-icon {
+    background-color: var(--primary-color);
+    border-radius: 50%;
+    border: 2px solid white;
+}
+
+.custom-marker-icon.depot {
+    background-color: var(--secondary-color);
+}
+
+.custom-marker-icon.current {
+    background-color: var(--warning-color);
+    animation: pulse 1s infinite;
+}
+
+/* Path styling */
+.route-path {
+    stroke: var(--primary-color);
+    stroke-width: 3;
+    stroke-opacity: 0.7;
+    fill: none;
+}
+
+.temp-path {
+    stroke: var(--warning-color);
+    stroke-width: 3;
+    stroke-dasharray: 5, 5;
+    stroke-opacity: 0.7;
+    fill: none;
+}
+
+/* Responsive adjustments */
+@media (max-width: 992px) {
+    .action-btns {
+        grid-template-columns: 1fr;
+    }
+    
+    .map-container {
+        height: 400px;
+    }
+    
+    .chart-container {
+        height: 200px;
+    }
+}
+
+@media (max-width: 768px) {
+    .map-container {
+        height: 350px;
+    }
+}
+
+/* About modal styling */
+.modal-content {
+    border-radius: 0.5rem;
+    border: none;
+    overflow: hidden;
+}
+
+.modal-body {
+    padding: 1.5rem;
+}
+
+.modal-body h5 {
+    color: var(--primary-color);
+    margin-top: 1.5rem;
+}
+
+.modal-body h5:first-child {
+    margin-top: 0;
+}
+
+/* Additional Improvements */
+.custom-controls {
+    padding: 0.75rem;
+    background-color: #f8f9fa;
+    border-radius: 0.25rem;
+    margin-top: 0.5rem;
+}
+
+#convergence-chart canvas {
+    max-width: 100%;
+}
+
+.info-overlay {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-size: 12px;
+    z-index: 1000;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.info-overlay p {
+    margin: 0;
+    padding: 0;
+}
+
+.legend {
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: 10px;
+    border-radius: 4px;
+    margin-top: 10px;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 5px;
+}
+
+.legend-color {
+    width: 15px;
+    height: 15px;
+    margin-right: 8px;
+    border-radius: 50%;
+}
+
+.legend-label {
+    font-size: 12px;
+}
